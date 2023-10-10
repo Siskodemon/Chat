@@ -17,6 +17,17 @@ public class Server extends JFrame {
     JTextArea log_server = new JTextArea("");
 
     Server(Client user){
+        //завершает работу программы при закрытии окна
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        // Устанавливаем позицию вызываемого окна на экране
+        setLocation(WINDOW_POSX, WINDOW_POSY);
+
+        // Задаём размеры создаваемого окна
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        //Задаём название(заголовок) для создаваемого окна
+        setTitle("Серверная  часть чата");
 
         start.addMouseListener(new MouseListener() {
             @Override
