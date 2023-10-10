@@ -2,13 +2,16 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.nio.file.Path;
+import java.util.Scanner;
 
 public class Client extends JFrame {
     private  static  final  int WINDOW_HEIGHT = 556;
     private  static  final  int WINDOW_WIDTH = 507;
     private  static  final  int WINDOW_POSX = 800;
     private  static  final  int WINDOW_POSY = 300;
-
+    private String status_server = "";
     JButton login = new JButton("Авторизация");
     JButton send = new JButton("Отправить");
     JTextField message = new JTextField("Введите текст сообщения...");
@@ -18,6 +21,10 @@ public class Client extends JFrame {
     JPasswordField password = new JPasswordField("Введите пароль...");
 
     JTextArea chat = new JTextArea("");
+
+    public void setStatusSerer(String status){
+        status_server = status;
+    }
     Client(){
         //завершает работу программы при закрытии окна
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -39,7 +46,11 @@ public class Client extends JFrame {
         send.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                chat.append(nikname.getText() + " ---> " + message.getText()+"\n");
+                if (status_server == "on") {
+                    chat.append(nikname.getText() + " ---> " + message.getText() + "\n");
+                    message.setText("");
+                }else
+                    chat.append("Отсутствует подключение к серверу... Проверьте соединение...\n");
             }
 
             @Override
@@ -65,7 +76,102 @@ public class Client extends JFrame {
         message.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                chat.append(nikname.getText() + " ---> " + message.getText()+"\n");
+                if (status_server == "on") {
+                    chat.append(nikname.getText() + " ---> " + message.getText() + "\n");
+                    message.setText("");
+                }else
+                    chat.append("Отсутствует подключение к серверу... Проверьте соединение...\n");
+            }
+        });
+
+        login.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (status_server == "on") {
+                    File folder = new File(".");
+                    for (File file : folder.listFiles()) {
+                        if (file.getName().contains("chat_")) {
+                            try {
+                                FileReader user_chat = new FileReader(file.getName());
+                                Scanner scan = new Scanner(user_chat);
+                                while (scan.hasNextLine()) {
+                                    chat.append(scan.nextLine() + "\n");
+                                }
+                                user_chat.close();
+                            } catch (FileNotFoundException ex) {
+                                throw new RuntimeException(ex);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+
+                    }
+                }else
+                    chat.append("Отсутствует подключение к серверу... Проверьте соединение...\n");
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                File file = new File("chat_" + nikname.getText()+".txt");
+                try {
+                    FileWriter input = new FileWriter(file);
+                    String all_message = chat.getText();
+                    input.write(all_message);
+                    input.close();
+
+                }  catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
             }
         });
         message.addMouseListener(new MouseListener() {

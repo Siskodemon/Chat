@@ -1,12 +1,5 @@
 public class Main {
     public static void main(String[] args) {
-        new Client(){
-
-        };
-
-       // new Server(){
-
-     //   };
-
+       new  Server(new Client());
     }
 }
