@@ -90,7 +90,7 @@ public class Client extends JFrame {
                 if (status_server == "on") {
                     File folder = new File(".");
                     for (File file : folder.listFiles()) {
-                        if (file.getName().contains("chat_")) {
+                        if (file.getName().contains("chat_" + nikname.getText())) {
                             try {
                                 FileReader user_chat = new FileReader(file.getName());
                                 Scanner scan = new Scanner(user_chat);
